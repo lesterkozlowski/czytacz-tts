@@ -1,0 +1,34 @@
+# Czytacz: reads coding-agent replies aloud (OmniVoice on the Intel iGPU). Manifest only, code lives in ../.
+id = "leszek.czytacz"
+name = "Czytacz"
+version = "0.1.0"
+min_herdr_version = "0.8.0"
+description = "Czyta odpowiedzi agentów na głos, zdanie po zdaniu, po polsku (lokalny OmniVoice na iGPU)"
+platforms = ["linux"]
+
+# starts the TTS daemon with herdr (it exits at once if one is already running)
+[[startup]]
+command = ["/home/leszek/kody/experiments/tts/OmniVoice/.venv/bin/python", "/home/leszek/kody/experiments/tts/voice/daemon.py"]
+
+# non-Claude agents (agy, codex, hermes...): read when an agent finishes working
+[[events]]
+on = "pane.agent_status_changed"
+command = ["/home/leszek/.local/bin/czytacz", "event"]
+
+[[actions]]
+id = "toggle"
+title = "Czytacz: wyłącz/włącz dla tego panelu"
+contexts = ["pane"]
+command = ["/home/leszek/.local/bin/czytacz", "toggle"]
+
+[[actions]]
+id = "toggle-all"
+title = "Czytacz: wyłącz/włącz wszędzie"
+contexts = ["global"]
+command = ["/home/leszek/.local/bin/czytacz", "toggle", "all"]
+
+[[actions]]
+id = "stop"
+title = "Czytacz: przerwij mówienie"
+contexts = ["global"]
+command = ["/home/leszek/.local/bin/czytacz", "stop"]
